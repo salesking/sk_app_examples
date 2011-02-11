@@ -1,0 +1,9 @@
+source :gemcutter
+gem "bundler"
+gem "rack"
+gem "activesupport"
+gem 'sinatra'
+gem 'oauth2'
+gem "redis"
+gem "redis-store"
+gem "curb"
