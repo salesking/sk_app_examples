@@ -4,5 +4,7 @@ rdoc/*
 pkg/*
 .bundle/*
 vendor/*
-Gemfile.lock
+*/.bundle/*
+*/vendor/*
+*/Gemfile.lock
 settings.yml

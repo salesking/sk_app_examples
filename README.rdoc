@@ -1,6 +1,6 @@
 = SalesKing App Examples
 
-oAuth is comming and with it some
+oAuth is comming and with it some app love
 
 == Examples
 
@@ -10,15 +10,17 @@ Provide the right callback and canvas url's in the registration form and then ed
 === Sinatra Example
 
 This app has merely 3 endpoint's to show the process of authenticating the app
-and logging a user in.
+and logging a user in. It uses simple curl commands(using curb) and saves 
+auth-information in a cookie .. nothing fancy yet
 
-When registering it use the following urls:
+Use those urls when registering:
 
-App URL: http://localhost:3001
-Canvas URL: http://localhost:3001/canvas
+App URL: http://localhost:4567
+Canvas URL: http://localhost:4567/canvas
 
 
   git clone ..
+  cd sk_app_examples/sinatra
   bundle install --path vendor
-  # rename settings.yml.default and insert app id + secret and sk url
-  ruby sinatra/example.rb
+  # rename settings.yml and insert app id + secret and sk url
+  rackup -p 4567
