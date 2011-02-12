@@ -13,7 +13,8 @@ require "signed_request"
 class ExampleApp < Sinatra::Base
   use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
-                           :expire_after => 2592000
+                           :expire_after => 2592000,
+                           :secret=> @@conf['session_secret']
   enable :sessions
   # load settings
   @@conf = YAML.load_file(File.join(File.dirname(__FILE__), 'settings.yml'))
@@ -53,15 +54,6 @@ class ExampleApp < Sinatra::Base
     puts tok.inspect
     session['token'] = tok['oauth_token']
     redirect '/'
-    # get user.id for the current _user
-#    user = ActiveSupport::JSON.decode(oauth.get('/api/users/current'))
-    # save to db, since we dont have an own user handling
-#    @@redis.hmset "#{DB}.#{user['id']}",
-#                  'token', oauth.token,
-#                  'expires_at', oauth.expires_at
-    # save token in local session
-#    session['user_id'] = user['id']
-    
   end
 
   protected

@@ -1,0 +1,24 @@
+= SalesKing App Examples
+
+oAuth is comming and with it some
+
+== Examples
+
+Before running you need to get yourself a shiny new pair of app key's from SalesKing by registering your app.
+Provide the right callback and canvas url's in the registration form and then edit your settings.yml
+
+=== Sinatra Example
+
+This app has merely 3 endpoint's to show the process of authenticating the app
+and logging a user in.
+
+When registering it use the following urls:
+
+App URL: http://localhost:3001
+Canvas URL: http://localhost:3001/canvas
+
+
+  git clone ..
+  bundle install --path vendor
+  # rename settings.yml.default and insert app id + secret and sk url
+  ruby sinatra/example.rb
