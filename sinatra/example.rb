@@ -18,7 +18,7 @@ class Example < Sinatra::Base
 
   # check session existence on each request and set current_user
   before do
-    if session['token'] && session['subdomain']
+    if session['access_token'] && session['subdomain']
       c = Curl::Easy.perform("#{sk_url}/api/users/current?access_token=#{session['token']}")
       @current_user = ActiveSupport::JSON.decode(c.body_str)['user']
     end
@@ -42,13 +42,13 @@ class Example < Sinatra::Base
 
   # simply redirect to the oauth dialog in SalesKing
   get '/sk_auth' do
-    redirect "#{sk_url}/oauth/authorize?client_id=#{@@conf['app_id']}&redirect_uri=#{oauth_redirect_uri}&scope=invoices, clients"
+    redirect "#{sk_url}/oauth/authorize?client_id=#{@@conf['app_id']}&redirect_uri=#{oauth_redirect_uri}&scope=invoices:read,destroy,update clients:read,destroy"
   end
 
   # Receives the oauth code from SalesKing, saves it to session and return to index
   get '/sk_auth/callback' do
     tok = get_token(params[:code])
-    session['token'] = tok['oauth_token']
+    session['token'] = tok['access_token']
     redirect '/'
   end
 
@@ -69,7 +69,7 @@ class Example < Sinatra::Base
   # === Returns
   # <String>:: url
   def sk_url
-    @sk_url ||= @@conf['sk_url'].gsub('*', session['subdomain'])
+    @@conf['sk_url'].gsub('*', session['subdomain'])
   end
 
   # === Returns
