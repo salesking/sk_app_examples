@@ -6,6 +6,7 @@ oAuth is comming and with it some app love
 
 Before you start coding you need to get yourself a shiny new pair of app key's
 from SalesKing by registering your app at *.salesking.eu/developers/apps
+
 Provide the right url's(app and canvas) in the registration form and then edit
 the settings in the example you are using.
 
@@ -55,6 +56,7 @@ Besides it shows how to:
 * use bundler to load required gems
 * use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
 
+Rack it up:
   cd ruby/sinatra_adv
   bundle install --path vendor
   # rename settings.yml and insert app id + secret and sk url
