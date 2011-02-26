@@ -5,11 +5,13 @@ oAuth is comming and with it some app love
 == Examples
 
 Before you start coding you need to get yourself a shiny new pair of app key's
-from SalesKing by registering your app. Provide the right url's(app and canvas)
-in the registration form and then edit the settings in the example you are using.
-
+from SalesKing by registering your app at *.salesking.eu/developers/apps
+Provide the right url's(app and canvas) in the registration form and then edit
+the settings in the example you are using.
 
 == PHP plain
+
+https://github.com/salesking/sk_app_examples/blob/master/php/plain_oauth.php
 
 Completely stripped down example, visualizing: 
 
@@ -27,17 +29,22 @@ The ruby examples impose some dependencies:
 * Curb(Curl): making the web requests, especially HTTPS without hassle
 
 Sinatra,by default, starts on port 4567, so you should use the following url when 
-registering your app: http://localhost:4567
+registering your app: http ://localhost:4567
 
 === Sinatra plain
+
+https://github.com/salesking/sk_app_examples/blob/master/ruby/sinatra_plain/example.rb
 
 This is the same as the plain php example, a single view handling the triple
 jump. This does not use bundler, so you need to install the required gems.
 
   sudo gem install curb sinatra
+  cd ruby/sinatra_plain
   ruby example.rb
 
 === Sinatra advanced
+
+https://github.com/salesking/sk_app_examples/tree/master/ruby/sinatra_adv
 
 The app saves login information(access_token) encrypted in a cookie. It also 
 demonstrates how to deal with dynamic SalesKing URL's(Subdomain for each account) 
@@ -48,6 +55,7 @@ Besides it shows how to:
 * use bundler to load required gems
 * use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
 
+  cd ruby/sinatra_adv
   bundle install --path vendor
   # rename settings.yml and insert app id + secret and sk url
   rackup -p 4567
