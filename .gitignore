@@ -2,9 +2,7 @@ nbproject/*
 coverage/*
 rdoc/*
 pkg/*
-.bundle/*
-vendor/*
-*/.bundle/*
-*/vendor/*
-*/Gemfile.lock
+.bundle
+vendor
+Gemfile.lock
 settings.yml

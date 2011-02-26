@@ -1,0 +1,12 @@
+= Changelog
+
+For those unable to read the commit messages
+
+== 2011-02-26
+
+* added plain php example
+* added plain sinatra example
+
+== 2011-02-15
+
+first version with advanced sinatra example

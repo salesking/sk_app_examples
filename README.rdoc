@@ -4,23 +4,50 @@ oAuth is comming and with it some app love
 
 == Examples
 
-Before running you need to get yourself a shiny new pair of app key's from SalesKing by registering your app.
-Provide the right callback and canvas url's in the registration form and then edit your settings.yml
-
-=== Sinatra Example
-
-This app has merely 3 endpoint's to show the process of authenticating the app
-and logging a user in. It uses simple curl commands(using curb) and saves 
-auth-information in a cookie .. nothing fancy yet
-
-Use those urls when registering:
-
-App URL: http://localhost:4567
-Canvas URL: http://localhost:4567/canvas
+Before you start coding you need to get yourself a shiny new pair of app key's
+from SalesKing by registering your app. Provide the right url's(app and canvas)
+in the registration form and then edit the settings in the example you are using.
 
 
-  git clone ..
-  cd sk_app_examples/sinatra
+== PHP plain
+
+Completely stripped down example, visualizing: 
+
+* user authentication
+* app authorization
+* app authentication
+
+One page does it all, no caching or saving of access token or user information,
+so definitely NOT something you want to use in production.
+
+== Ruby
+
+The ruby examples impose some dependencies:
+* Sinatra: providing a webserver and lifting the scripts into your browser
+* Curb(Curl): making the web requests, especially HTTPS without hassle
+
+Sinatra,by default, starts on port 4567, so you should use the following url when 
+registering your app: http://localhost:4567
+
+=== Sinatra plain
+
+This is the same as the plain php example, a single view handling the triple
+jump. This does not use bundler, so you need to install the required gems.
+
+  sudo gem install curb sinatra
+  ruby example.rb
+
+=== Sinatra advanced
+
+The app saves login information(access_token) encrypted in a cookie. It also 
+demonstrates how to deal with dynamic SalesKing URL's(Subdomain for each account) 
+by asking the user to provide his subdomain.
+
+Besides it shows how to:
+* read setting from a yaml-file (settings.yml)
+* use bundler to load required gems
+* use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
+
   bundle install --path vendor
   # rename settings.yml and insert app id + secret and sk url
   rackup -p 4567
