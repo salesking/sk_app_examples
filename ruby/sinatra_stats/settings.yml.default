@@ -1,0 +1,12 @@
+app_id:
+app_secret:
+# SalesKing url, * is beeing replaced by subdomain
+sk_url: "https://*.salesking.eu"
+# url used for auth dialog redirects. See before /canvas filter
+app_redirect_url:  http://localhost:4567/canvas
+#canvas page (slug)name in salesking
+app_canvas_slug: my_super_app
+# scope the app needs
+app_scope: "api/payments:read"
+# used to encrypt the session-cookie
+session_secret: random_string

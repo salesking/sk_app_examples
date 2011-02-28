@@ -1,0 +1,16 @@
+!!! Strict
+%html{ "xmlns" => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{ 'http-equiv' => 'Content-Style-Type', 'content' => 'text/css' }
+    %meta{ 'http-equiv' => 'content-language', 'content' => 'de' }
+    %meta{ 'http-equiv' => 'Content-Script-Type', 'content' => 'text/javascript' }
+    %meta{ 'content' => 'text/html; charset=utf-8' }
+    %meta{ 'content' => 'text/css' }
+    %link(href="/style.css" media="all" rel="Stylesheet" type="text/css")
+    %script(src="/js/jquery.js" type="text/javascript")
+    %script(src="/js/highcharts.js" type="text/javascript")
+    %script(src="/js/stats.js" type="text/javascript")
+
+  %body
+    #main
+      = yield
