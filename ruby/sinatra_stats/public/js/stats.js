@@ -99,7 +99,7 @@ var chart_data = JSON.parse( $('#chart_data').text() );
        //categories: chart_data.lbx
     },
     series: [{ type: 'area',
-        //name: 'Data',
+        name: 'Payments',
         //one day in milliseconds
         pointInterval: 24 * 3600 * 1000, 
         pointStart: Date.UTC(chart_data.start[0], chart_data.start[1], chart_data.start[2]),

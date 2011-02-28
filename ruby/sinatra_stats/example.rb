@@ -4,10 +4,9 @@ Bundler.setup
 
 require 'sinatra/base'
 require "active_support/json"
-require "active_support/time" #CoreExtensions::Numeric::Time
+require "active_support/time"
 require "curb"
 require "haml"
-require "redis"
 
 require "lib/signed_request"
 require "lib/sk_oauth"
@@ -26,41 +25,39 @@ class Example < Sinatra::Base
   SK = SkOauth.new(@@conf)
 
 
-  # check session existence on each request and set current_user
+  # check session existence on each request unless on canvas page
   before do
     unless session['access_token']
-      redirect '/canvas' unless request.path_info =~ /canvas/# please login
+      redirect '/canvas' unless request.path_info =~ /canvas/
     end
   end
 
+  # Receives the oauth code from SalesKing, saves it to session
+  # return to index
   before '/canvas' do
     if signed_request = params[:signed_request]
       r = SignedRequest.new(signed_request, SK.app_secret)
       raise "invalid request #{r.data.inspect}" unless r.valid?
+      # always save and set subdomain
+      session['sub_domain'] = r.data['sub_domain']
+      SK.sub_domain = session['sub_domain']
       if r.data['user_id'] # logged in
         # new session with access_token, user_id, sub_domain
         session['access_token'] = r.data['access_token']
         session['user_id'] = r.data['user_id']
         session['company_id'] = r.data['company_id']
         session['sub_domain'] = r.data['sub_domain']
-      else # must authorize redirect to oauth dialog
-        SK.sub_domain = r.data['sub_domain']
-        session['sub_domain'] = r.data['sub_domain']
+      else # must authorize redirect to oauth dialog                
         halt "<script> top.location.href='#{SK.auth_dialog}'</script>"
       end
     end
     if params[:code] # coming back from auth dialog
-      SK.sub_domain = session['sub_domain']
       SK.get_token(params[:code])
       #redirect to sk internal canvas page, where we are no authenticated
       halt "<script> top.location.href='#{SK.sk_canvas_url}'</script>"
     end
-  end
+  end  
 
-  # Receives the oauth code from SalesKing, saves it to session and return to index
-  # show form with select:
-  # - payments, invoices, estimates
-  # - Date from / Date to
   get '/canvas' do
     haml :canvas
   end
@@ -88,7 +85,7 @@ class Example < Sinatra::Base
     result = {:data => [], :start => [] }
     current_day = first_day
     while current_day <= last_day do
-      # Append hash with formatted data to the array, time-series labels(date) set in js
+      # add values to the data-array and fill empty days with 0, time-series labels(date) set in js
       result[:data] << (data[current_day] ? data[current_day] : 0)
       current_day += 1.day
     end
