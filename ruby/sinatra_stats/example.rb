@@ -5,6 +5,7 @@ Bundler.setup
 require 'sinatra/base'
 require "active_support/json"
 require "active_support/time"
+require "active_support/inflector"
 require "curb"
 require "haml"
 
@@ -64,35 +65,54 @@ class Example < Sinatra::Base
 
   post '/stats' do
     # grab data from sk, for each result page
-    obj_type = params[:obj_type]
+    objs_type = params[:obj_type] # invoices, credit_notes
     SK.sub_domain = session['sub_domain']
-    url = "#{SK.sk_url}/api/#{obj_type}?access_token=#{session['access_token']}"
+    url= if objs_type == 'invoices'
+            "#{SK.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}&filter[status_closed]=1&filter[from]=02+01+2009"
+          else
+            "#{SK.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}"
+          end
     c = Curl::Easy.perform(url)
     # grab obj list from response body, containing json string
-    ret = ActiveSupport::JSON.decode(c.body_str)
+    data = ActiveSupport::JSON.decode(c.body_str)
+    hlp = {'payments' => ['amount', 'date'], 
+           'invoices' => ['net_total', 'date'], }
     #collect daily chart data
-    data = {}
-    ret[obj_type].each do |obj|
-      date = obj['payment']['date']
-      # init day
-      data[date] ||= 0
+    result = get_chart_data(data[objs_type], objs_type, hlp[objs_type][0], hlp[objs_type][1])
+    # data is read as json by javascript from DOM
+    @chart_data = ActiveSupport::JSON.encode(result)
+    haml :stats
+  end
+
+  protected
+
+  # === Parameter
+  # <Array[Hash{String=>Hash{String=>String}}]>::
+  #{"payment"=>{ "amount"=>59.5, ..}, "links"=>[{"href"=>"payments/bNn1vy_gWr379bxPJQHgBF", "rel"=>"self"}]}
+
+  def get_chart_data(objs_ary, objs_type, sum_fld, date_fld)
+    data ={}
+    obj_type = objs_type.singularize
+    objs_ary.each do |obj|
+      date = obj[obj_type][date_fld]
+      data[date] ||= 0 # init day
       # sum amounts for this day
-      data[date ] += obj['payment']['amount']
+      data[date ] += obj[obj_type][sum_fld]
     end
     # - detect min-max date to build x scale
     dates = data.keys.sort
     first_day, last_day = dates.first, dates.last
-    result = {:data => [], :start => [] }
+
+    result = {:data => [], 
+              :start => [first_day.year, first_day.month, first_day.day] }
     current_day = first_day
     while current_day <= last_day do
-      # add values to the data-array and fill empty days with 0, time-series labels(date) set in js
+      # add values to the data-array and fill empty days with 0,
+      # time-series labels(date) set in js
       result[:data] << (data[current_day] ? data[current_day] : 0)
       current_day += 1.day
     end
-    result[:start] = [first_day.year, first_day.month, first_day.day]
-    # data is read as json by javascript from DOM
-    @chart_data = ActiveSupport::JSON.encode(result)
-    haml :stats
+    result
   end
 
 end

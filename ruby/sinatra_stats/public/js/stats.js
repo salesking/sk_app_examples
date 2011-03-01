@@ -90,15 +90,16 @@ var chart_data = JSON.parse( $('#chart_data').text() );
   var chart = new Highcharts.Chart({
     chart: {
       renderTo: 'chart',
-       zoomType: 'x',
-      defaultSeriesType: 'area'
+      zoomType: 'x',
+      defaultSeriesType: 'line'
     },
     xAxis: {
        type: 'datetime',
        maxZoom: 7 * 24 * 3600000 // fourteen days
        //categories: chart_data.lbx
     },
-    series: [{ type: 'area',
+    series: [{ 
+        type: 'line', //column
         name: 'Payments',
         //one day in milliseconds
         pointInterval: 24 * 3600 * 1000, 
