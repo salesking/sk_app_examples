@@ -1,17 +1,3 @@
-require "rubygems"
-require "bundler"
-Bundler.setup
-
-require 'sinatra/base'
-require "active_support/json"
-require "active_support/time"
-require "active_support/inflector"
-require "curb"
-require "haml"
-
-require "lib/signed_request"
-require "lib/sk_oauth"
-
 class Example < Sinatra::Base
   # load settings
   @@conf = YAML.load_file(File.join(File.dirname(__FILE__), 'settings.yml'))
@@ -22,8 +8,8 @@ class Example < Sinatra::Base
   enable :sessions
   # set public dir to load js
   set :public, File.dirname(__FILE__) + '/public'
-  # create new sk object used for oauth token,code requests
-  SK = SkOauth.new(@@conf)
+  # create new object used for oauth token,code requests
+  AUTH = SK::SDK::Oauth.new(@@conf)
 
 
   # check session existence on each request unless on canvas page
@@ -37,11 +23,11 @@ class Example < Sinatra::Base
   # return to index
   before '/canvas' do
     if signed_request = params[:signed_request]
-      r = SignedRequest.new(signed_request, SK.app_secret)
+      r = SK::SDK::SignedRequest.new(signed_request, AUTH.app_secret)
       raise "invalid request #{r.data.inspect}" unless r.valid?
       # always save and set subdomain
       session['sub_domain'] = r.data['sub_domain']
-      SK.sub_domain = session['sub_domain']
+      AUTH.sub_domain = session['sub_domain']
       if r.data['user_id'] # logged in
         # new session with access_token, user_id, sub_domain
         session['access_token'] = r.data['access_token']
@@ -49,15 +35,15 @@ class Example < Sinatra::Base
         session['company_id'] = r.data['company_id']
         session['sub_domain'] = r.data['sub_domain']
       else # must authorize redirect to oauth dialog                
-        halt "<script> top.location.href='#{SK.auth_dialog}'</script>"
+        halt "<script> top.location.href='#{AUTH.auth_dialog}'</script>"
       end
     end
     if params[:code] # coming back from auth dialog
-      SK.get_token(params[:code])
+      AUTH.get_token(params[:code])
       #redirect to sk internal canvas page, where we are no authenticated
-      halt "<script> top.location.href='#{SK.sk_canvas_url}'</script>"
+      halt "<script> top.location.href='#{AUTH.sk_canvas_url}'</script>"
     end
-  end  
+  end
 
   get '/canvas' do
     haml :canvas
@@ -66,11 +52,11 @@ class Example < Sinatra::Base
   post '/stats' do
     # grab data from sk, for each result page
     objs_type = params[:obj_type] # invoices, credit_notes
-    SK.sub_domain = session['sub_domain']
+    AUTH.sub_domain = session['sub_domain']
     url= if objs_type == 'invoices'
-            "#{SK.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}&filter[status_closed]=1&filter[from]=02+01+2009"
+            "#{AUTH.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}&filter[status_closed]=1&filter[from]=02+01+2009"
           else
-            "#{SK.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}"
+            "#{AUTH.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}"
           end
     c = Curl::Easy.perform(url)
     # grab obj list from response body, containing json string
@@ -87,9 +73,11 @@ class Example < Sinatra::Base
   protected
 
   # === Parameter
-  # <Array[Hash{String=>Hash{String=>String}}]>::
-  #{"payment"=>{ "amount"=>59.5, ..}, "links"=>[{"href"=>"payments/bNn1vy_gWr379bxPJQHgBF", "rel"=>"self"}]}
-
+  # objs_ary<Array[Hash{String=>Hash{String=>String}}]>::
+  # {"payment"=>{ "amount"=>59.5, ..}, "links"=>[{"href"=>"payments/bNn1vy_gWr379bxPJQHgBF", "rel"=>"self"}]}
+  # objs_type<String>:: plural name of the collection/objects
+  # sum_fld<String>:: the fieldname to sum up
+  # date_fld<String>:: date fieldname used for the sum: created_at, ..
   def get_chart_data(objs_ary, objs_type, sum_fld, date_fld)
     data ={}
     obj_type = objs_type.singularize
@@ -101,16 +89,17 @@ class Example < Sinatra::Base
     end
     # - detect min-max date to build x scale
     dates = data.keys.sort
-    first_day, last_day = dates.first, dates.last
-
-    result = {:data => [], 
-              :start => [first_day.year, first_day.month, first_day.day] }
-    current_day = first_day
-    while current_day <= last_day do
+    # shorten var
+    first, last = dates.first, dates.last
+    # set start date(day) used by highcharts-js to build the date scale
+    result = {:data => [],
+              :start => [first.year, first.month, first.day] }
+    current = first
+    while current <= last do
       # add values to the data-array and fill empty days with 0,
       # time-series labels(date) set in js
-      result[:data] << (data[current_day] ? data[current_day] : 0)
-      current_day += 1.day
+      result[:data] << (data[current] ? data[current] : 0)
+      current += 1.day
     end
     result
   end

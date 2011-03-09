@@ -6,3 +6,4 @@ gem 'sinatra'
 gem "haml"
 gem "curb"
 gem "i18n"
+gem "sk_sdk"
