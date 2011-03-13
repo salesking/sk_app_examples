@@ -1,0 +1,12 @@
+= Plain Login - Example
+
+This is the same as the plain php example, a single view handling the triple
+jump.
+
+== Usage
+
+This does not use bundler, so you need to install the required gems.
+
+  sudo gem install curb sinatra
+  cd ruby/sinatra_plain
+  ruby example.rb

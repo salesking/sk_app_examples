@@ -40,7 +40,7 @@ class Example < Sinatra::Base
     end
     if params[:code] # coming back from auth dialog
       AUTH.get_token(params[:code])
-      #redirect to sk internal canvas page, where we are no authenticated
+      #redirect to sk internal canvas page, where we are now authenticated
       halt "<script> top.location.href='#{AUTH.sk_canvas_url}'</script>"
     end
   end
@@ -73,11 +73,11 @@ class Example < Sinatra::Base
   protected
 
   # === Parameter
-  # objs_ary<Array[Hash{String=>Hash{String=>String}}]>::
-  # {"payment"=>{ "amount"=>59.5, ..}, "links"=>[{"href"=>"payments/bNn1vy_gWr379bxPJQHgBF", "rel"=>"self"}]}
+  # objs_ary<Array[Hash{String=>Hash{String=>String}}]>:: Array with objects in their JSON-Schema markup
+  # {"payment"=>{ "amount"=>59.5, ..}, "links"=>[..]}
   # objs_type<String>:: plural name of the collection/objects
   # sum_fld<String>:: the fieldname to sum up
-  # date_fld<String>:: date fieldname used for the sum: created_at, ..
+  # date_fld<String>:: date fieldname used for the sum: created_at, date,..
   def get_chart_data(objs_ary, objs_type, sum_fld, date_fld)
     data ={}
     obj_type = objs_type.singularize

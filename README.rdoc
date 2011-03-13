@@ -26,38 +26,28 @@ so definitely NOT something you want to use in production.
 == Ruby
 
 The ruby examples impose some dependencies:
-* Sinatra: providing a webserver and lifting the scripts into your browser
+* Sinatra: as webserver lifting the scripts into your browser
 * Curb(Curl): making the web requests, especially HTTPS without hassle
 
-Sinatra,by default, starts on port 4567, so you should use the following url when 
+Most apps use bundler to prevent the gem-hassle and can be racked-up.
+Sinatra, by default, starts on port 4567, so you should use the following url when
 registering your app: http ://localhost:4567
 
-=== Sinatra plain
+=== Plain login
 
+This is the same as the plain php example, a single view handling the triple-oAuth2
+jump.
 https://github.com/salesking/sk_app_examples/blob/master/ruby/sinatra_plain/example.rb
 
-This is the same as the plain php example, a single view handling the triple
-jump. This does not use bundler, so you need to install the required gems.
+=== Advanced login
 
-  sudo gem install curb sinatra
-  cd ruby/sinatra_plain
-  ruby example.rb
-
-=== Sinatra advanced
+The app saves login information(access_token) encrypted in a cookie. It also 
+demonstrates how to deal with dynamic SalesKing URL's(Subdomain for each account).
 
 https://github.com/salesking/sk_app_examples/tree/master/ruby/sinatra_adv
 
-The app saves login information(access_token) encrypted in a cookie. It also 
-demonstrates how to deal with dynamic SalesKing URL's(Subdomain for each account) 
-by asking the user to provide his subdomain.
+=== Payment chart
 
-Besides it shows how to:
-* read setting from a yaml-file (settings.yml)
-* use bundler to load required gems
-* use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
+Show payment or invoice stats in a zoomable chart.
 
-Rack it up:
-  cd ruby/sinatra_adv
-  bundle install --path vendor
-  # rename settings.yml and insert app id + secret and sk url
-  rackup -p 4567
+https://github.com/salesking/sk_app_examples/tree/master/ruby/sinatra_stats

@@ -1,0 +1,27 @@
+= Payment Statistics Chart - Example
+
+This app sports canvas page integration and displays a zoomable chart for
+payments or invoices.
+
+== Usage
+
+The app saves login information(access_token) encrypted in a cookie. It also 
+demonstrates how to login on a canvas page and use the signed_request parameter.
+
+Besides it shows how to:
+* use Highcharts for a great chart experience
+* read setting from a yaml-file (settings.yml)
+* use bundler to load required gems
+* use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
+
+Rack it up:
+  cd ruby/sinatra_stats
+  bundle install --path vendor
+  # rename settings.yml and insert app id + secret and sk url
+  cp settings.yml.default settings.yml && nano settings.yml
+  # start in bundled gems scope
+  bundle exec rackup -p 4567
+
+Now got to the canvas page inside your SalesKing account
+  my-sub.salesking.eu/app/my-canvas-slug
+and you will be redirected to the oAuth dialog
