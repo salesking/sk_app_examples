@@ -1,11 +1,3 @@
-require "rubygems"
-require "bundler"
-Bundler.setup
-
-require 'sinatra/base'
-require "active_support/json"
-require "curb"
-
 class Example < Sinatra::Base
   # load settings
   @@conf = YAML.load_file(File.join(File.dirname(__FILE__), 'settings.yml'))
@@ -35,7 +27,7 @@ class Example < Sinatra::Base
     if @current_user
       out << "<h2>Glad you made it King: #{@current_user['email']}</h2>"
     elsif session['subdomain']
-      authorize_url = "#{sk_url}/oauth/authorize?client_id=#{@@conf['app_id']}&redirect_uri=#{oauth_redirect_uri}&scope=invoices:read,destroy,update clients:read,destroy"
+      authorize_url = "#{sk_url}/oauth/authorize?client_id=#{@@conf['id']}&redirect_uri=#{oauth_redirect_uri}&scope=invoices:read,destroy,update clients:read,destroy"
       out << "<p><a href=#{authorize_url}>now go and allow this app to access your SK account</a></p>"
     end
     out
@@ -53,7 +45,7 @@ class Example < Sinatra::Base
   # Makes a GET request to the access_token endpoint in SK and receives the
   # oauth/access token
   def get_token(code)
-    url = "#{sk_url}/oauth/access_token?code=#{code}&client_id=#{@@conf['app_id']}&client_secret=#{@@conf['app_secret']}&redirect_uri=#{oauth_redirect_uri}"
+    url = "#{sk_url}/oauth/access_token?code=#{code}&client_id=#{@@conf['id']}&client_secret=#{@@conf['secret']}&redirect_uri=#{oauth_redirect_uri}"
     c = Curl::Easy.perform(url)
     # grab token from response body, containing json string
     ActiveSupport::JSON.decode(c.body_str)
@@ -68,7 +60,8 @@ class Example < Sinatra::Base
   end
 
   # === Returns
-  # <String>:: dynamic creation of the redirect uri localhost:port/sk_auth/callback
+  # <String>:: dynamic creation of the redirect uri:
+  #  localhost:port/sk_auth/callback   or whatever your service url is
   def oauth_redirect_uri
       uri = URI.parse(request.url)
       uri.path = '/sk_auth/callback'

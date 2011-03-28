@@ -1,4 +1,4 @@
-sk_url: https://*.salesking.eu
-session_secret: very_long_random_string_to_encode_the_session
-app_id:
-app_secret: 
+key:
+secret:
+# optional if you run your own instance of SalesKing
+#sk_url: https://*.salesking.eu

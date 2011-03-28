@@ -1,12 +1,19 @@
-app_id:
-app_secret:
-# SalesKing url, * is beeing replaced by subdomain
-sk_url: "https://*.salesking.eu"
+# App credentials, received after registering a new app
+id:
+secret:
+
+# canvas page (slug)name where your app can be reached. See app registration form
+# => xy.salesking.eu/app/MY_APP_SLUG
+canvas_slug: my_super_app
+
 # url used for auth dialog redirects. See before /canvas filter
-app_redirect_url:  http://localhost:4567/canvas
-#canvas page (slug)name where your app can be reached => xy.salesking.eu/app/MY_APP_SLUG 
-app_canvas_slug: my_super_app
-# scope the app needs
-app_scope: "api/payments:read api/invoices:read"
+redirect_url:  http://localhost:4567/canvas
+
+# scope-permissions the app needs
+scope: "api/payments:read api/invoices:read"
+
 # used to encrypt the session-cookie
 session_secret: random_string
+
+#optional if you are running your own SalesKing. * is beeing replaced by subdomain
+#sk_url: "https://*.salesking.eu"

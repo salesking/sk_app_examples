@@ -3,5 +3,4 @@ gem "bundler"
 gem "rack"
 gem "activesupport"
 gem 'sinatra'
-gem 'oauth2'
 gem "curb"

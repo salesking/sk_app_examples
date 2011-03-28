@@ -1,14 +1,20 @@
 = SalesKing App Examples
 
-oAuth is comming and with it some app love
+SalesKing can be connected and enhanced using the API and Apps. Our Apps are 
+using oAuth2 for authentication and authorization, like you may know it from 
+facebook.
+When registering your app in SalesKing you get credentials(app id + secret) needed
+to identify your app and establish a trusted connection.
 
 == Examples
 
-Before you start coding you need to get yourself a shiny new pair of app key's
-from SalesKing by registering your app at *.salesking.eu/developers/apps
+Before you start coding:
+* register your app in your SalesKing account ../developers/apps
+* grab a shiny new pair of app key & secret
 
-Provide the right url's(app and canvas) in the registration form and then edit
-the settings in the example you are using.
+Depending on the example our are using, Provide the right url's(app and canvas )
+in the registration form and then edit the apps settings(inline) or the
+settings.yml file.
 
 == PHP plain
 

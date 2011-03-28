@@ -6,20 +6,20 @@ require "curb"
 
 get "/" do
   # settings
-  @app_id = "APP_CLIENT_ID"
-  @app_secret = "APP_SECRET"
-  @app_url = "http://localhost/oauth_test"
-  @app_scope = "api/clients:read"
+  @id = "CLIENT_ID"
+  @secret = "SECRET"
+  @url = "http://localhost/oauth_test"
+  @scope = "api/clients:read"
   @sk_url = "https://SUBDOMAIN.salesking.eu"
    
 
   unless code = params["code"] # redirect to authorize url
-    dialog_url = "#{@sk_url}/oauth/authorize?client_id=#{@app_id}&scope=#{CGI::escape(@app_scope)}&redirect_uri=#{CGI::escape(@app_url)}"
+    dialog_url = "#{@sk_url}/oauth/authorize?client_id=#{@id}&scope=#{CGI::escape(@scope)}&redirect_uri=#{CGI::escape(@url)}"
     redirect dialog_url
   end
 
   # build URL to get the access token
-  token_url = "#{@sk_url}/oauth/access_token?client_id=#{@app_id}&redirect_uri=#{CGI::escape(@app_url)}&client_secret=#{@app_secret}&code=#{code}"
+  token_url = "#{@sk_url}/oauth/access_token?client_id=#{@id}&redirect_uri=#{CGI::escape(@url)}&client_secret=#{@secret}&code=#{code}"
   # GET and parse access_token response json
   c = Curl::Easy.perform(token_url)
   resp = ActiveSupport::JSON.decode(c.body_str)

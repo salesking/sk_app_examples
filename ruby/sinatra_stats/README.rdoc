@@ -9,9 +9,8 @@ The app saves login information(access_token) encrypted in a cookie. It also
 demonstrates how to login on a canvas page and use the signed_request parameter.
 
 Besides it shows how to:
+* using SK::SDK to authenticate an app
 * use Highcharts for a great chart experience
-* read setting from a yaml-file (settings.yml)
-* use bundler to load required gems
 * use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
 
 Rack it up:

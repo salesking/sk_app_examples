@@ -23,7 +23,7 @@ class Example < Sinatra::Base
   # return to index
   before '/canvas' do
     if signed_request = params[:signed_request]
-      r = SK::SDK::SignedRequest.new(signed_request, AUTH.app_secret)
+      r = SK::SDK::SignedRequest.new(signed_request, AUTH.secret)
       raise "invalid request #{r.data.inspect}" unless r.valid?
       # always save and set subdomain
       session['sub_domain'] = r.data['sub_domain']

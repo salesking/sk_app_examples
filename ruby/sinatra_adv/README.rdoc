@@ -1,10 +1,5 @@
 = Advanced Login - Example
 
-This app sports canvas page integration and displays a zoomable chart for
-payments or invoices.
-
-== Usage
-
 The app saves login information(access_token) encrypted in a cookie. It also
 demonstrates how to deal with dynamic SalesKing URL's(Subdomain for each account)
 by asking the user to provide his subdomain.
@@ -14,6 +9,8 @@ Besides it shows how to:
 * use bundler to load required gems
 * use a config.ru file to rackup an app f.ex on passenger-phusion-enabled servers
 
+== Usage
+
 Rack it up:
   cd ruby/sinatra_adv
   bundle install --path vendor
@@ -21,4 +18,3 @@ Rack it up:
   cp settings.yml.default settings.yml && nano settings.yml
   # start in bundled gems scope
   bundle exec rackup -p 4567
-  rackup -p 4567
