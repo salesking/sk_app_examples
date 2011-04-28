@@ -11,7 +11,6 @@ class Example < Sinatra::Base
   # create new object used for oauth token,code requests
   AUTH = SK::SDK::Oauth.new(@@conf)
 
-
   # check session existence on each request unless on canvas page
   before do
     unless session['access_token']
@@ -20,8 +19,8 @@ class Example < Sinatra::Base
   end
 
   # Receives the oauth code from SalesKing, saves it to session
-  # return to index
-  before '/canvas' do
+  # renders canvas haml
+  post '/canvas' do
     if signed_request = params[:signed_request]
       r = SK::SDK::SignedRequest.new(signed_request, AUTH.secret)
       raise "invalid request #{r.data.inspect}" unless r.valid?
@@ -34,18 +33,19 @@ class Example < Sinatra::Base
         session['user_id'] = r.data['user_id']
         session['company_id'] = r.data['company_id']
         session['sub_domain'] = r.data['sub_domain']
-      else # must authorize redirect to oauth dialog                
+      else # must authorize redirect to oauth dialog
         halt "<script> top.location.href='#{AUTH.auth_dialog}'</script>"
       end
     end
-    if params[:code] # coming back from auth dialog
+    haml :canvas    
+  end
+
+  get '/canvas' do
+    if params[:code] # coming back from auth dialog as redirect_url
       AUTH.get_token(params[:code])
       #redirect to sk internal canvas page, where we are now authenticated
       halt "<script> top.location.href='#{AUTH.sk_canvas_url}'</script>"
     end
-  end
-
-  get '/canvas' do
     haml :canvas
   end
 

@@ -16,7 +16,7 @@
 
   # the callback from authorize, has the code needed to grab the
   # access_token and allow the app.
-  # This part can be kicked if the user already allowed the app
+  # This part can be skipped if the user already allowed the app
   $code = $_REQUEST["code"];
   if(!empty($code)) { # authorize app .. not using access_token later on
     $token_url = $sk_url . "/oauth/access_token?" .
@@ -30,7 +30,7 @@
     echo("<script> top.location.href='" . $sk_canvas_url . "'</script>");
   }
 
-  # first time user comes in redirect him to the oauth dialog
+  # first time user comes in, redirect him to the oauth dialog
   if (empty($data["user_id"]) && empty($code) )  {
     echo("<script> top.location.href='" . $auth_url . "'</script>");
   } else { # third time the user has allowed the app so we see his user id
