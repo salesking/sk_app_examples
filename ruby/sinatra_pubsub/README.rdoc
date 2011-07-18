@@ -1,0 +1,12 @@
+= PubSub - Example
+
+This shows how to register for push notifications(here invoice updates) and how
+to decode the result
+
+== Usage
+
+This does not use bundler, so you need to install the required gems.
+
+  sudo gem install curb sinatra haml sk_sdk activesupport
+  cd ruby/sinatra_pubsub
+  ruby example.rb
