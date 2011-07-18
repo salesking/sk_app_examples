@@ -3,6 +3,9 @@
 This shows how to register for push notifications(here invoice updates) and how
 to decode the result
 
+More information here:
+http://dev.blog.salesking.eu/docs/push-notifications-pubsub/
+
 == Usage
 
 This does not use bundler, so you need to install the required gems.

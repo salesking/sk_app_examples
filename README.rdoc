@@ -52,6 +52,13 @@ demonstrates how to deal with dynamic SalesKing URL's(Subdomain for each account
 
 https://github.com/salesking/sk_app_examples/tree/master/ruby/sinatra_adv
 
+=== Push Notifications / PubSub
+
+An app showing how to register for push notifications(WebHooks/PubSub) and how
+to deal with the callback results
+
+https://github.com/salesking/sk_app_examples/tree/master/ruby/sinatra_pubsub
+
 === Payment chart
 
 Show payment or invoice stats in a zoomable chart.
