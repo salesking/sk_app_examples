@@ -42,10 +42,10 @@ class Example < Sinatra::Base
 
   protected
 
-  # Makes a GET request to the access_token endpoint in SK and receives the
-  # oauth/access token
+  # Makes a GET request to the token endpoint in SK and receives the
+  # access token
   def get_token(code)
-    url = "#{sk_url}/oauth/access_token?code=#{code}&client_id=#{@@conf['id']}&client_secret=#{@@conf['secret']}&redirect_uri=#{oauth_redirect_uri}"
+    url = "#{sk_url}/oauth/token?code=#{code}&client_id=#{@@conf['id']}&client_secret=#{@@conf['secret']}&redirect_uri=#{oauth_redirect_uri}"
     c = Curl::Easy.perform(url)
     # grab token from response body, containing json string
     ActiveSupport::JSON.decode(c.body_str)

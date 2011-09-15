@@ -21,7 +21,7 @@ get "/" do
   end
 
   # build URL to get the access token
-  token_url = "#{SK_URL}/oauth/access_token?client_id=#{APP_ID}&redirect_uri=#{CGI::escape(URL)}&client_secret=#{SECRET}&code=#{code}"
+  token_url = "#{SK_URL}/oauth/token?client_id=#{APP_ID}&redirect_uri=#{CGI::escape(URL)}&client_secret=#{SECRET}&code=#{code}"
   # GET and parse access_token response json
   c = Curl::Easy.perform(token_url)
   resp = ActiveSupport::JSON.decode(c.body_str)

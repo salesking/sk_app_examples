@@ -19,7 +19,7 @@ get "/" do
   end
 
   # build URL to get the access token
-  token_url = "#{@sk_url}/oauth/access_token?client_id=#{@id}&redirect_uri=#{CGI::escape(@url)}&client_secret=#{@secret}&code=#{code}"
+  token_url = "#{@sk_url}/oauth/token?client_id=#{@id}&redirect_uri=#{CGI::escape(@url)}&client_secret=#{@secret}&code=#{code}"
   # GET and parse access_token response json
   c = Curl::Easy.perform(token_url)
   resp = ActiveSupport::JSON.decode(c.body_str)

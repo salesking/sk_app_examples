@@ -19,7 +19,7 @@
   # This part can be skipped if the user already allowed the app
   $code = $_REQUEST["code"];
   if(!empty($code)) { # authorize app .. not using access_token later on
-    $token_url = $sk_url . "/oauth/access_token?" .
+    $token_url = $sk_url . "/oauth/token?" .
       "client_id=". $app_id .
       "&redirect_uri=" . urlencode($app_canvas_url) .
       "&client_secret=" . $app_secret .

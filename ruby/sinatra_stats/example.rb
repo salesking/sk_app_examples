@@ -54,7 +54,7 @@ class Example < Sinatra::Base
     objs_type = params[:obj_type] # invoices, credit_notes
     AUTH.sub_domain = session['sub_domain']
     url= if objs_type == 'invoices'
-            "#{AUTH.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}&filter[status_closed]=1&filter[from]=02+01+2009"
+            "#{AUTH.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}&filter[status_closed]=1&filter[from]=2009+08+25"
           else
             "#{AUTH.sk_url}/api/#{objs_type}?access_token=#{session['access_token']}"
           end
