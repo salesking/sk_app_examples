@@ -7,13 +7,13 @@ secret:
 canvas_slug: my_super_app
 
 # url used for auth dialog redirects. See before /canvas filter
-redirect_url:  http://localhost:4567/canvas
+redirect_url: "http://localhost:4567/canvas"
 
 # scope-permissions the app needs
 scope: "api/payments:read api/invoices:read"
 
 # used to encrypt the session-cookie
-session_secret: random_string
+session_secret: "random_string"
 
-#optional if you are running your own SalesKing. * is beeing replaced by subdomain
-#sk_url: "https://*.salesking.eu"
+#optional if you are using our dev-server you need to change the SalesKing url. * is being replaced automatically with subdomain of the current user
+#sk_url: "https://*.dev.salesking.eu"

@@ -8,9 +8,10 @@ class Example < Sinatra::Base
   enable :sessions
   # set public dir to load js
   set :public, File.dirname(__FILE__) + '/public'
+  # allow loading this page inside a iframe
+  set :protection, :except => :frame_options
   # create new object used for oauth token,code requests
   AUTH = SK::SDK::Oauth.new(@@conf)
-
   # check session existence on each request unless on canvas page
   before do
     unless session['access_token']
@@ -37,13 +38,14 @@ class Example < Sinatra::Base
         halt "<script> top.location.href='#{AUTH.auth_dialog}'</script>"
       end
     end
-    haml :canvas    
+    haml :canvas
   end
 
+  # coming back from auth dialog as redirect_url + auth code
+  # Redirects to the apps iframed canvas page inside SalesKing, where we are now authenticated
   get '/canvas' do
-    if params[:code] # coming back from auth dialog as redirect_url
+    if params[:code]
       AUTH.get_token(params[:code])
-      #redirect to sk internal canvas page, where we are now authenticated
       halt "<script> top.location.href='#{AUTH.sk_canvas_url}'</script>"
     end
     haml :canvas
@@ -61,8 +63,8 @@ class Example < Sinatra::Base
     c = Curl::Easy.perform(url)
     # grab obj list from response body, containing json string
     data = ActiveSupport::JSON.decode(c.body_str)
-    hlp = {'payments' => ['amount', 'date'], 
-           'invoices' => ['net_total', 'date'], }
+    hlp = {'payments' => ['amount', 'date'],
+           'invoices' => ['net_total', 'date'] }
     #collect daily chart data
     result = get_chart_data(data[objs_type], objs_type, hlp[objs_type][0], hlp[objs_type][1])
     # data is read as json by javascript from DOM
@@ -72,32 +74,29 @@ class Example < Sinatra::Base
 
   protected
 
-  # === Parameter
-  # objs_ary<Array[Hash{String=>Hash{String=>String}}]>:: Array with objects in their JSON-Schema markup
+  # collect date based sums for the objects and
+  # @param [Hash{String=>Hash{String=>String}}] objs_ary objects in their JSON-Schema markup
   # {"payment"=>{ "amount"=>59.5, ..}, "links"=>[..]}
-  # objs_type<String>:: plural name of the collection/objects
-  # sum_fld<String>:: the fieldname to sum up
-  # date_fld<String>:: date fieldname used for the sum: created_at, date,..
+  # @param [String] objs_type plural name of the collection: invoices
+  # @param [String] sum_fld the fieldname to sum up
+  # @param [String] date_fld date fieldname used for the sum: created_at, date,..
   def get_chart_data(objs_ary, objs_type, sum_fld, date_fld)
     data ={}
     obj_type = objs_type.singularize
     objs_ary.each do |obj|
-      date = obj[obj_type][date_fld]
+      date = Date.parse obj[obj_type][date_fld]
       data[date] ||= 0 # init day
       # sum amounts for this day
-      data[date ] += obj[obj_type][sum_fld]
+      data[date] += obj[obj_type][sum_fld]
     end
     # - detect min-max date to build x scale
     dates = data.keys.sort
-    # shorten var
-    first, last = dates.first, dates.last
-    # set start date(day) used by highcharts-js to build the date scale
+    # set start date(day) for highcharts to build the date scale
     result = {:data => [],
-              :start => [first.year, first.month, first.day] }
-    current = first
-    while current <= last do
-      # add values to the data-array and fill empty days with 0,
-      # time-series labels(date) set in js
+              :start => [dates.first.year, dates.first.month, dates.first.day] }
+    current = dates.first
+    while current <= dates.last do
+      # add values to the data-array and fill empty days with 0, labels(date) are set in js
       result[:data] << (data[current] ? data[current] : 0)
       current += 1.day
     end

@@ -1,9 +1,8 @@
-source :gemcutter
-gem "bundler"
-gem "rack"
-gem "activesupport"
+gem 'bundler'
+gem 'rack'
+gem 'activesupport'
 gem 'sinatra'
-gem "haml"
-gem "curb"
-gem "i18n"
-gem "sk_sdk"
+gem 'haml'
+gem 'curb'
+gem 'i18n'
+gem 'sk_sdk'
