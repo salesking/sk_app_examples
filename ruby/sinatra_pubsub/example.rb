@@ -1,17 +1,17 @@
-require "rubygems"
+require 'rubygems'
 require 'sinatra'
-require "active_support/json"
-require "haml"
-require "cgi"
-require "curb"
-require "sk_sdk/signed_request"
+require 'active_support/json'
+require 'haml'
+require 'cgi'
+require 'curb'
+require 'sk_sdk/signed_request'
 
 # settings
-APP_ID = "7c8fcae8a80a3d97"
-SECRET = "294f5bdbf902c8d6f894e57c88747ca9"
-URL = "http://localhost:4567"
-SCOPE = "invoices:update api/subs"
-SK_URL = "http://demo.salesking.local:3000"
+APP_ID = '7c8fcae8a80a3d97'
+SECRET = '294f5bdbf902c8d6f894e57c88747ca9'
+URL = 'http://localhost:4567'
+SCOPE = 'invoices:update api/subs'
+SK_URL = 'http://demo.salesking.local:3000'
 
 get "/" do
 
@@ -30,14 +30,14 @@ get "/" do
   # GET info about current user
   u = Curl::Easy.perform(usr_url)
   @user = ActiveSupport::JSON.decode(u.body_str)['user']
-  
+
   # subscribe for a callback
   s = Curl::Easy.new("#{SK_URL}/api/subs?access_token=#{resp['access_token']}")
   s.http_post(Curl::PostField.content('sub[channel]', 'invoice.update'),
               Curl::PostField.content('sub[callback_url]', "#{URL}/invoice_create_callback"))
   @sub = ActiveSupport::JSON.decode(s.body_str)['sub']
   haml :index
-  
+
 end
 
 post "/invoice_create_callback" do

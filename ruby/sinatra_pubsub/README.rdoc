@@ -10,6 +10,6 @@ http://dev.blog.salesking.eu/docs/push-notifications-pubsub/
 
 This does not use bundler, so you need to install the required gems.
 
-  sudo gem install curb sinatra haml sk_sdk activesupport
   cd ruby/sinatra_pubsub
+  bundle install
   ruby example.rb
