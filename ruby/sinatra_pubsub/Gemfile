@@ -1,0 +1,8 @@
+source :rubygems
+gem 'bundler'
+gem 'activesupport'
+gem 'sinatra'
+gem 'curb'
+gem 'haml'
+gem 'sk_sdk'
+gem 'sk_api_schema'
