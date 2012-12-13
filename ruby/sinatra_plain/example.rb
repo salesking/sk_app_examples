@@ -1,17 +1,17 @@
-require "rubygems"
+require 'rubygems'
 require 'sinatra'
-require "active_support/json"
-require "curb"
+require 'active_support/json'
+require 'curb'
 
 
-get "/" do
+get '/' do
   # settings
-  @id = "CLIENT_ID"
-  @secret = "SECRET"
-  @url = "http://localhost/oauth_test"
-  @scope = "api/clients:read"
-  @sk_url = "https://SUBDOMAIN.salesking.eu"
-   
+  @id = 'CLIENT_ID'
+  @secret = 'SECRET'
+  @url = 'http://localhost/oauth_test'
+  @scope = 'api/clients:read'
+  @sk_url = 'https://SUBDOMAIN.salesking.eu'
+
 
   unless code = params["code"] # redirect to authorize url
     dialog_url = "#{@sk_url}/oauth/authorize?client_id=#{@id}&scope=#{CGI::escape(@scope)}&redirect_uri=#{CGI::escape(@url)}"

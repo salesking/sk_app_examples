@@ -3,10 +3,13 @@
 This is the same as the plain php example, a single view handling the triple
 jump.
 
+the second example_token_repsonse.rb shows how to directly get an access_token e.g for js apps
+
 == Usage
 
 This does not use bundler, so you need to install the required gems.
 
-  sudo gem install curb sinatra
   cd ruby/sinatra_plain
+  bundle install
   ruby example.rb
+  ruby example_token_response.rb
